@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-movieAPP (iOS)/Pods-movieAPP (iOS)-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Alamofire-iOS/Alamofire.framework
+${BUILT_PRODUCTS_DIR}/Kingfisher-iOS/Kingfisher.framework
+${BUILT_PRODUCTS_DIR}/SwiftyJSON-iOS/SwiftyJSON.framework
