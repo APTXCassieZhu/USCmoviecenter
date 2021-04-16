@@ -26,11 +26,11 @@ struct CarouselView<Media: View>: View {
         HStack(spacing: 0) {
                 self.media
             }
-            .frame(width: 360, height: 300, alignment: .leading)
-            .offset(x: CGFloat(self.currentIndex) * -360, y: 0)
+            .frame(width: 370, height: 300, alignment: .leading)
+            .offset(x: CGFloat(self.currentIndex) * -370, y: 0)
             .animation(.spring())
             .onReceive(self.timer) { _ in
-                self.currentIndex = (self.currentIndex + 1) % 3
+                self.currentIndex = (self.currentIndex + 1) % self.numberOfImages
             }
         }
     }

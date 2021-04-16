@@ -43,8 +43,9 @@ struct ContentView: View {
                             ForEach(homeData.nowPlay,  id: \.self){ img in
                                 ZStack{
                                     KFImage(URL(string: img.path)!)
+                                        .resizable()
                                         .scaledToFill()
-                                        .frame(width: 361.8, height: 310)
+                                        .frame(width: 370, height: 310)
                                         .clipped()
                                         .blur(radius: 10)
                                     
