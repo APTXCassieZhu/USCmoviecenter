@@ -7,15 +7,15 @@
 
 import Foundation
 
-class Media {
-    var id: Int
+struct Media : Hashable{
+    var ID: Int
     var title: String
     var type: String
     var path: String
     
     
-    init(id: Int, title: String, type: String, path: String){
-        self.id = id
+    init(ID: Int, title: String, type: String, path: String){
+        self.ID = ID
         self.title = title
         self.type = type
         self.path = path
