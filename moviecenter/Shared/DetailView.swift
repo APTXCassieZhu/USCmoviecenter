@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct DetailView: View {
-    var slide: Slide
+    private var ID: Int
+    private var type: String
     
-    init(slide: Slide) {
-        self.slide = slide
+    init(ID: Int, type: String) {
+        self.ID = ID
+        self.type = type
     }
     
     var body: some View {
-        Text(slide.title)
+        Text(self.type)
     }
 }
 

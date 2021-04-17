@@ -17,7 +17,7 @@ struct SlideView: View {
         self.title = title
     }
     
-    @State var selected : Slide? = nil
+    @State var selected : Int? = nil
 
     var body: some View {
         VStack(alignment: .leading){
@@ -27,7 +27,7 @@ struct SlideView: View {
             ScrollView(.horizontal){
                 HStack(alignment: .top, spacing: 25) {
                     ForEach(self.slideList,  id: \.self){ slide in
-                        NavigationLink(destination: DetailView(slide: slide), tag: slide, selection: $selected){
+                        NavigationLink(destination: DetailView(ID: slide.ID, type: slide.type), tag: slide.ID, selection: $selected){
                             VStack{
                                     KFImage(URL(string: slide.path)!)
                                         .resizable()
@@ -46,12 +46,16 @@ struct SlideView: View {
                             }.frame(width: 95)
                             .contentShape(RoundedRectangle(cornerRadius: 10))
                             .onTapGesture {
-                                selected = slide
+                                selected = slide.ID
                             }
                             .contextMenu(ContextMenu(menuItems: {
                                                         Text("Menu Item 1")
-                                                        Text("Menu Item 2")
-                                                        Text("Menu Item 3")}))
+                                Button("Share on Facebook"){
+                                    
+                                }
+                                Link("Share on Twitter", destination: URL(string: "https://www.themoviedb.org/")!)
+                                    .foregroundColor(.gray)
+                            }))
                         }
                     }
                 }

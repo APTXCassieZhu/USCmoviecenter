@@ -85,19 +85,21 @@ struct ContentView: View {
                                 .fontWeight(.bold)
                             CarouselView(numberOfImages: homeData.nowPlay.count) {
                                 ForEach(homeData.nowPlay,  id: \.self){ img in
-                                    ZStack{
-                                        KFImage(URL(string: img.path)!)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 370, height: 290)
-                                            .clipped()
-                                            .blur(radius: 10)
-                                        
-                                        KFImage(URL(string: img.path)!)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 200, height: 280)
-                                            .clipped()
+                                    NavigationLink(destination: DetailView(ID: img.ID, type: img.type)){
+                                        ZStack{
+                                            KFImage(URL(string: img.path)!)
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 370, height: 290)
+                                                .clipped()
+                                                .blur(radius: 10)
+                                            
+                                            KFImage(URL(string: img.path)!)
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 200, height: 280)
+                                                .clipped()
+                                        }
                                     }
                                 }
                             }.frame(height: 280)
@@ -128,19 +130,21 @@ struct ContentView: View {
                                 .fontWeight(.bold)
                             CarouselView(numberOfImages: homeData.trending.count) {
                                 ForEach(homeData.trending,  id: \.self){ img in
-                                    ZStack{
-                                        KFImage(URL(string: img.path)!)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 370, height: 290)
-                                            .clipped()
-                                            .blur(radius: 10)
-                                        
-                                        KFImage(URL(string: img.path)!)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 200, height: 280)
-                                            .clipped()
+                                    NavigationLink(destination: DetailView(ID: img.ID, type: img.type)){
+                                        ZStack{
+                                            KFImage(URL(string: img.path)!)
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 370, height: 290)
+                                                .clipped()
+                                                .blur(radius: 10)
+                                            
+                                            KFImage(URL(string: img.path)!)
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 200, height: 280)
+                                                .clipped()
+                                        }
                                     }
                                 }
                             }.frame(height: 280)
