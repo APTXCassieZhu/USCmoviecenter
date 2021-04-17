@@ -54,8 +54,6 @@ class HomeData: ObservableObject{
                             AF.request("https://ruiqi571.wl.r.appspot.com/ios/popular/tv").responseData{
                                 (data) in
                                 let json = try! JSON(data: data.data!)
-                                print(json)
-
                                 for i in json["results"]{
                                     self.popularTV.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue))
                                 }
@@ -111,16 +109,16 @@ struct ContentView: View {
                             BottomView()
                         }
                     }
-                        .padding(.leading, 15)
-                        .padding(.trailing, 15)
-                        .navigationBarTitle(Text("USC Films"))
+                        .navigationBarTitle("USC Films")
                         .navigationBarItems(
                             trailing:
                                 Button("TV Shows"){
                                     self.showMovie = false
                                 }
                         )
-                }
+                        .padding(.leading, 18)
+                        .padding(.trailing, 18)
+                }.navigationViewStyle(StackNavigationViewStyle())
             }else{
                 NavigationView {
                     ScrollView(.vertical){
@@ -154,16 +152,16 @@ struct ContentView: View {
                             BottomView()
                         }
                     }
-                        .padding(.leading, 15)
-                        .padding(.trailing, 15)
-                        .navigationBarTitle(Text("USC Films"))
+                        .navigationBarTitle("USC Films")
                         .navigationBarItems(
                             trailing:
                                 Button("Movies"){
                                     self.showMovie = true
                                 }
                         )
-                }
+                        .padding(.leading, 18)
+                        .padding(.trailing, 18)
+                }.navigationViewStyle(StackNavigationViewStyle())
             }
         }
     }
