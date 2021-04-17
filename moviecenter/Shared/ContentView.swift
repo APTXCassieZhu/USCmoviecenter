@@ -15,6 +15,10 @@ class HomeData: ObservableObject{
     @Published var nowPlay = [Media]()
     @Published var topMovie = [Slide]()
     @Published var popularMovie = [Slide]()
+    @Published var trending = [Media]()
+    @Published var topTV = [Slide]()
+    @Published var popularTV = [Slide]()
+    
 
     init(){
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/now_playing").responseData{
@@ -35,8 +39,31 @@ class HomeData: ObservableObject{
                     for i in json["results"]{
                         self.popularMovie.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue))
                     }
-                    
-                    self.fetched = true;
+                    AF.request("https://ruiqi571.wl.r.appspot.com/ios/trending/tv").responseData{
+                        (data) in
+                        let json = try! JSON(data: data.data!)
+                        for i in json["results"]{
+                            self.trending.append(Media(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
+                        }
+                        AF.request("https://ruiqi571.wl.r.appspot.com/ios/toprated/tv").responseData{
+                            (data) in
+                            let json = try! JSON(data: data.data!)
+                            for i in json["results"]{
+                                self.topTV.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue))
+                            }
+                            AF.request("https://ruiqi571.wl.r.appspot.com/ios/popular/tv").responseData{
+                                (data) in
+                                let json = try! JSON(data: data.data!)
+                                print(json)
+
+                                for i in json["results"]{
+                                    self.popularTV.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue))
+                                }
+                                
+                                self.fetched = true;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -45,50 +72,98 @@ class HomeData: ObservableObject{
 
 struct ContentView: View {
     @StateObject var homeData = HomeData()
+    @State private var showMovie = true
     
     var body: some View {
         if(homeData.fetched == false){
             ProgressView("Fetching Data...")
         }else{
-            NavigationView {
-                ScrollView(.vertical){
-                    VStack(alignment: .leading){
-                        Text("Now Playing")
-                            .font(.system(size: 23, design: .rounded))
-                            .fontWeight(.bold)
-                        CarouselView(numberOfImages: homeData.nowPlay.count) {
-                            ForEach(homeData.nowPlay,  id: \.self){ img in
-                                ZStack{
-                                    KFImage(URL(string: img.path)!)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 370, height: 280)
-                                        .clipped()
-                                        .blur(radius: 10)
-                                    
-                                    KFImage(URL(string: img.path)!)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 200, height: 270)
-                                        .clipped()
+            if(showMovie == true){
+                NavigationView {
+                    ScrollView(.vertical){
+                        VStack(alignment: .leading){
+                            Text("Now Playing")
+                                .font(.system(size: 23, design: .rounded))
+                                .fontWeight(.bold)
+                            CarouselView(numberOfImages: homeData.nowPlay.count) {
+                                ForEach(homeData.nowPlay,  id: \.self){ img in
+                                    ZStack{
+                                        KFImage(URL(string: img.path)!)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 370, height: 290)
+                                            .clipped()
+                                            .blur(radius: 10)
+                                        
+                                        KFImage(URL(string: img.path)!)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 200, height: 280)
+                                            .clipped()
+                                    }
                                 }
-                            }
-                        }.frame(height: 270)
-                        .clipped()
-                        
-                        SlideView(slideList: homeData.topMovie, title: "Top Rated")
-                        SlideView(slideList: homeData.popularMovie, title: "Popular")
+                            }.frame(height: 280)
+                            .clipped()
+                            
+                            SlideView(slideList: homeData.topMovie, title: "Top Rated")
+                            SlideView(slideList: homeData.popularMovie, title: "Popular")
+                            
+                            BottomView()
+                        }
                     }
+                        .padding(.leading, 15)
+                        .padding(.trailing, 15)
+                        .navigationBarTitle(Text("USC Films"))
+                        .navigationBarItems(
+                            trailing:
+                                Button("TV Shows"){
+                                    self.showMovie = false
+                                }
+                        )
                 }
-                    .padding(.leading, 15)
-                    .padding(.trailing, 15)
-                    .navigationBarTitle(Text("USC Films"))
-                    .navigationBarItems(
-                        trailing:
-                            Button("TV Shows"){
-
-                            }
-                    )
+            }else{
+                NavigationView {
+                    ScrollView(.vertical){
+                        VStack(alignment: .leading){
+                            Text("Trending")
+                                .font(.system(size: 23, design: .rounded))
+                                .fontWeight(.bold)
+                            CarouselView(numberOfImages: homeData.trending.count) {
+                                ForEach(homeData.trending,  id: \.self){ img in
+                                    ZStack{
+                                        KFImage(URL(string: img.path)!)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 370, height: 290)
+                                            .clipped()
+                                            .blur(radius: 10)
+                                        
+                                        KFImage(URL(string: img.path)!)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 200, height: 280)
+                                            .clipped()
+                                    }
+                                }
+                            }.frame(height: 280)
+                            .clipped()
+                            
+                            SlideView(slideList: homeData.topTV, title: "Top Rated")
+                            SlideView(slideList: homeData.popularTV, title: "Popular")
+                            
+                            BottomView()
+                        }
+                    }
+                        .padding(.leading, 15)
+                        .padding(.trailing, 15)
+                        .navigationBarTitle(Text("USC Films"))
+                        .navigationBarItems(
+                            trailing:
+                                Button("Movies"){
+                                    self.showMovie = true
+                                }
+                        )
+                }
             }
         }
     }

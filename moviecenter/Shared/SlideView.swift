@@ -23,7 +23,7 @@ struct SlideView: View {
                 .font(.system(size: 23, design: .rounded))
                 .fontWeight(.bold)
             ScrollView(.horizontal){
-                HStack(spacing: 20) {
+                HStack(spacing: 25) {
                     ForEach(self.slideList,  id: \.self){ slide in
                         VStack{
                             KFImage(URL(string: slide.path)!)

@@ -26,7 +26,7 @@ struct CarouselView<Media: View>: View {
         HStack(spacing: 0) {
                 self.media
             }
-            .frame(width: 370, height: 270, alignment: .leading)
+            .frame(width: 370, height: 280, alignment: .leading)
             .offset(x: CGFloat(self.currentIndex) * -370, y: 0)
             .animation(.spring())
             .onReceive(self.timer) { _ in
