@@ -21,6 +21,7 @@ class HomeData: ObservableObject{
     
 
     init(){
+
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/now_playing").responseData{
             (data) in
             let json = try! JSON(data: data.data!)
@@ -94,7 +95,7 @@ struct ContentView: View {
                                             KFImage(URL(string: img.path)!)
                                                 .resizable()
                                                 .scaledToFill()
-                                                .frame(width: 370, height: 290)
+                                                .frame(width: 360, height: 290)
                                                 .clipped()
                                                 .blur(radius: 10)
                                             
@@ -106,7 +107,7 @@ struct ContentView: View {
                                         }
                                     }
                                 }
-                            }.frame(height: 280)
+                            }.frame(width: 360, height: 280)
                             .clipped()
                             
                             SlideView(slideList: homeData.topMovie, title: "Top Rated")
@@ -115,6 +116,8 @@ struct ContentView: View {
                             BottomView()
                         }
                     }
+                        .padding(.leading, 20)
+                        .padding(.trailing, 10)
                         .navigationBarTitle("USC Films")
                         .navigationBarItems(
                             trailing:
@@ -122,8 +125,6 @@ struct ContentView: View {
                                     self.showMovie = false
                                 }
                         )
-                        .padding(.leading, 18)
-                        .padding(.trailing, 18)
                 }.navigationViewStyle(StackNavigationViewStyle())
             }else{
                 NavigationView {
@@ -139,7 +140,7 @@ struct ContentView: View {
                                             KFImage(URL(string: img.path)!)
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fill)
-                                                .frame(width: 370, height: 290)
+                                                .frame(width: 360, height: 290)
                                                 .clipped()
                                                 .blur(radius: 10)
                                             
@@ -160,6 +161,8 @@ struct ContentView: View {
                             BottomView()
                         }
                     }
+                        .padding(.leading, 20)
+                        .padding(.trailing, 10)
                         .navigationBarTitle("USC Films")
                         .navigationBarItems(
                             trailing:
@@ -167,8 +170,6 @@ struct ContentView: View {
                                     self.showMovie = true
                                 }
                         )
-                        .padding(.leading, 18)
-                        .padding(.trailing, 18)
                 }.navigationViewStyle(StackNavigationViewStyle())
             }
         }

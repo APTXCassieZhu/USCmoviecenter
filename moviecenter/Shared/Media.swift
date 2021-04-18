@@ -51,3 +51,15 @@ struct Video : Hashable {
         self.key = key
     }
 }
+
+struct listItem : Hashable, Encodable, Decodable{
+    var ID: Int
+    var type: String
+    var path: String
+    
+    init(ID: Int, type: String, path: String){
+        self.ID = ID
+        self.type = type
+        self.path = path
+    }
+}

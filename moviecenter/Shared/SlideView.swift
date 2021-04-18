@@ -7,8 +7,25 @@
 
 import SwiftUI
 import Kingfisher
+import Foundation
+
+class WatchList: ObservableObject{
+    @Published var list = [listItem]()
+    
+    init(){
+        self.list = [listItem]()
+        if let objects = UserDefaults.standard.value(forKey: "user_objects") as? Data {
+             let decoder = JSONDecoder()
+             if let objectsDecoded = try? decoder.decode(Array.self, from: objects) as [listItem] {
+                self.list = objectsDecoded
+             }
+        }
+    }
+}
 
 struct SlideView: View {
+    @StateObject var listData = WatchList()
+    
     private var slideList: [Slide]
     private var title: String
     
@@ -18,14 +35,15 @@ struct SlideView: View {
     }
     
     @State var selected : Int? = nil
-
+    
+    
     var body: some View {
         VStack(alignment: .leading){
             Text(self.title)
                 .font(.system(size: 23, design: .rounded))
                 .fontWeight(.bold)
             ScrollView(.horizontal){
-                HStack(alignment: .top, spacing: 25) {
+                HStack(alignment: .top, spacing: 28.5) {
                     ForEach(self.slideList,  id: \.self){ slide in
                         NavigationLink(destination: DetailView(ID: slide.ID, type: slide.type), tag: slide.ID, selection: $selected){
                             VStack{
@@ -50,13 +68,30 @@ struct SlideView: View {
                             }
                             .contextMenu(ContextMenu(menuItems: {
                                 Button(action: {
-                                    let formattedString = "https://www.facebook.com/sharer/sharer.php?u=https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
-                                    guard let url = URL(string: formattedString) else { return }
-                                    UIApplication.shared.open(url)
+                                    let item = listItem(ID: slide.ID, type: slide.type, path: slide.path)
+                                    if(self.listData.list.contains(item)){
+                                        if let index = self.listData.list.firstIndex(of: item){
+                                            self.listData.list.remove(at: index)
+                                        }
+                                    }else{
+                                        self.listData.list.append(item)
+                                    }
+                                    let encoder = JSONEncoder()
+                                    if let encoded = try? encoder.encode(self.listData.list){
+                                        UserDefaults.standard.set(encoded, forKey: "user_objects")
+                                        print(self.listData.list)
+                                    }
                                 }){
-                                    HStack(spacing: 10) {
-                                        Image(systemName: "bookmark.fill")
-                                        Text("Share on Facebook")
+                                    if(self.listData.list.contains(listItem(ID: slide.ID, type: slide.type, path: slide.path))){
+                                        HStack(spacing: 10) {
+                                            Image(systemName: "bookmark.fill")
+                                            Text("Remove from watchList")
+                                        }
+                                    }else{
+                                        HStack(spacing: 10) {
+                                            Image(systemName: "bookmark")
+                                            Text("Add to watchList")
+                                        }
                                     }
                                 }
                                 Button(action: {
@@ -74,7 +109,6 @@ struct SlideView: View {
                                 Button(action: {
                                     let tmdburl = "https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
                                     let formattedString = "https://twitter.com/intent/tweet?text=Check%20out%20this%20link:%20"+tmdburl+"&hashtags=CSCI571USCFilms"
-                                    print(formattedString)
                                     guard let url = URL(string: formattedString) else { return }
                                     UIApplication.shared.open(url)
                                 }){
