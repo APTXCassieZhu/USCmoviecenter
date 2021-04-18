@@ -25,40 +25,40 @@ class HomeData: ObservableObject{
             (data) in
             let json = try! JSON(data: data.data!)
             for i in json["results"]{
-                self.nowPlay.append(Media(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["backdrop_path"].stringValue))
+                self.nowPlay.append(Media(ID: i.1["id"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["backdrop_path"].stringValue))
             }
             AF.request("https://ruiqi571.wl.r.appspot.com/ios/toprated/movie").responseData{
                 (data) in
                 let json = try! JSON(data: data.data!)
                 for i in json["results"]{
-                    self.topMovie.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue, video: Video(site: i.1["video"]["site"].stringValue, type: i.1["video"]["type"].stringValue, name: i.1["video"]["name"].stringValue, key: i.1["video"]["key"].stringValue)
+                    self.topMovie.append(Slide(ID: i.1["id"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
                     ))
                 }
                 AF.request("https://ruiqi571.wl.r.appspot.com/ios/popular/movie").responseData{
                     (data) in
                     let json = try! JSON(data: data.data!)
                     for i in json["results"]{
-                        self.popularMovie.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue, video: Video(site: i.1["video"]["site"].stringValue, type: i.1["video"]["type"].stringValue, name: i.1["video"]["name"].stringValue, key: i.1["video"]["key"].stringValue)
+                        self.popularMovie.append(Slide(ID: i.1["id"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
                         ))
                     }
                     AF.request("https://ruiqi571.wl.r.appspot.com/ios/trending/tv").responseData{
                         (data) in
                         let json = try! JSON(data: data.data!)
                         for i in json["results"]{
-                            self.trending.append(Media(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
+                            self.trending.append(Media(ID: i.1["id"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
                         }
                         AF.request("https://ruiqi571.wl.r.appspot.com/ios/toprated/tv").responseData{
                             (data) in
                             let json = try! JSON(data: data.data!)
                             for i in json["results"]{
-                                self.topTV.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue, video: Video(site: i.1["video"]["site"].stringValue, type: i.1["video"]["type"].stringValue, name: i.1["video"]["name"].stringValue, key: i.1["video"]["key"].stringValue)
+                                self.topTV.append(Slide(ID: i.1["id"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
                                 ))
                             }
                             AF.request("https://ruiqi571.wl.r.appspot.com/ios/popular/tv").responseData{
                                 (data) in
                                 let json = try! JSON(data: data.data!)
                                 for i in json["results"]{
-                                    self.popularTV.append(Slide(ID: i.1["ID"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue, video: Video(site: i.1["video"]["site"].stringValue, type: i.1["video"]["type"].stringValue, name: i.1["video"]["name"].stringValue, key: i.1["video"]["key"].stringValue)
+                                    self.popularTV.append(Slide(ID: i.1["id"].intValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
                                     ))
                                 }
                                 

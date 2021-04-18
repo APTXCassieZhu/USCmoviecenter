@@ -27,15 +27,13 @@ struct Slide : Hashable {
     var type: String
     var path: String
     var date: String
-    var video: Video
     
-    init(ID: Int, title: String, type: String, path: String, date: String, video: Video){
+    init(ID: Int, title: String, type: String, path: String, date: String){
         self.ID = ID
         self.title = title
         self.type = type
         self.path = path
         self.date = date
-        self.video = video
     }
 }
 

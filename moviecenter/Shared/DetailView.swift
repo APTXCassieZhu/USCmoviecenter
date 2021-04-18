@@ -17,7 +17,7 @@ struct DetailView: View {
     }
     
     var body: some View {
-        Text(self.type)
+        Text("\(self.ID)")
     }
 }
 

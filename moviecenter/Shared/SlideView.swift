@@ -49,26 +49,40 @@ struct SlideView: View {
                                 selected = slide.ID
                             }
                             .contextMenu(ContextMenu(menuItems: {
-                                                        Text("Menu Item 1")
                                 Button(action: {
                                     let formattedString = "https://www.facebook.com/sharer/sharer.php?u=https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
                                     guard let url = URL(string: formattedString) else { return }
                                     UIApplication.shared.open(url)
                                 }){
                                     HStack(spacing: 10) {
-                                        Image(systemName: "pencil")
-                                        Text("Edit")
+                                        Image(systemName: "bookmark.fill")
+                                        Text("Share on Facebook")
                                     }
                                 }
                                 Button(action: {
-                                    let tmdburl = "https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
-                                    let formattedString = "https://twitter.com/intent/tweet?text=Check out this link: "+tmdburl+"&hashtags=CSCI571USCFilms"
+                                    let formattedString = "https://www.facebook.com/sharer/sharer.php?u=https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
                                     guard let url = URL(string: formattedString) else { return }
                                     UIApplication.shared.open(url)
                                 }){
                                     HStack(spacing: 10) {
-                                        Image(systemName: "pencil")
-                                        Text("Edit")
+                                        Image("facebook-app-symbol")
+                                            .resizable()
+                                            .scaledToFit()
+                                        Text("Share on Facebook")
+                                    }
+                                }
+                                Button(action: {
+                                    let tmdburl = "https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
+                                    let formattedString = "https://twitter.com/intent/tweet?text=Check%20out%20this%20link:%20"+tmdburl+"&hashtags=CSCI571USCFilms"
+                                    print(formattedString)
+                                    guard let url = URL(string: formattedString) else { return }
+                                    UIApplication.shared.open(url)
+                                }){
+                                    HStack(spacing: 10) {
+                                        Image("twitter")
+                                            .resizable()
+                                            .scaledToFit()
+                                        Text("Share on Twitter")
                                     }
                                 }
                             }))
