@@ -31,7 +31,7 @@ struct SlideView: View {
                             VStack{
                                     KFImage(URL(string: slide.path)!)
                                         .resizable()
-                                        .scaledToFill()
+                                        .aspectRatio(contentMode: .fill)
                                         .frame(width: 95, height: 140)
                                         .cornerRadius(10)
                                     Text(slide.title)
@@ -50,11 +50,27 @@ struct SlideView: View {
                             }
                             .contextMenu(ContextMenu(menuItems: {
                                                         Text("Menu Item 1")
-                                Button("Share on Facebook"){
-                                    
+                                Button(action: {
+                                    let formattedString = "https://www.facebook.com/sharer/sharer.php?u=https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
+                                    guard let url = URL(string: formattedString) else { return }
+                                    UIApplication.shared.open(url)
+                                }){
+                                    HStack(spacing: 10) {
+                                        Image(systemName: "pencil")
+                                        Text("Edit")
+                                    }
                                 }
-                                Link("Share on Twitter", destination: URL(string: "https://www.themoviedb.org/")!)
-                                    .foregroundColor(.gray)
+                                Button(action: {
+                                    let tmdburl = "https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
+                                    let formattedString = "https://twitter.com/intent/tweet?text=Check out this link: "+tmdburl+"&hashtags=CSCI571USCFilms"
+                                    guard let url = URL(string: formattedString) else { return }
+                                    UIApplication.shared.open(url)
+                                }){
+                                    HStack(spacing: 10) {
+                                        Image(systemName: "pencil")
+                                        Text("Edit")
+                                    }
+                                }
                             }))
                         }
                     }
