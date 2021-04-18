@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject var notice = Notice()
     @State private var selection = 1
 
     var body: some View {
@@ -23,6 +24,7 @@ struct MainView: View {
                     Label("Home", systemImage: "house")
                 }
                 .tag(1)
+                .environmentObject(notice)
             
             WatchListView()
                 .tabItem {

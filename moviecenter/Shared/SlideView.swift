@@ -29,13 +29,14 @@ struct SlideView: View {
     private var slideList: [Slide]
     private var title: String
     
+    @EnvironmentObject var notice: Notice
+    
     init(slideList: [Slide], title: String) {
         self.slideList = slideList
         self.title = title
     }
     
     @State var selected : Int? = nil
-    
     
     var body: some View {
         VStack(alignment: .leading){
@@ -52,6 +53,7 @@ struct SlideView: View {
                                         .aspectRatio(contentMode: .fill)
                                         .frame(width: 95, height: 140)
                                         .cornerRadius(10)
+                                        
                                     Text(slide.title)
                                         .font(.system(size: 14))
                                         .fontWeight(.heavy)
@@ -61,7 +63,9 @@ struct SlideView: View {
                                         .multilineTextAlignment(.center)
                                         .font(.system(size: 14))
                                         .foregroundColor(Color.gray)
-                            }.frame(width: 95)
+                                        
+                            }
+                            .frame(width: 95)
                             .contentShape(RoundedRectangle(cornerRadius: 10))
                             .onTapGesture {
                                 selected = slide.ID
@@ -72,15 +76,17 @@ struct SlideView: View {
                                     if(self.listData.list.contains(item)){
                                         if let index = self.listData.list.firstIndex(of: item){
                                             self.listData.list.remove(at: index)
+                                            notice.msg = "\(slide.title) was removed from Watchlist"
                                         }
                                     }else{
                                         self.listData.list.append(item)
+                                        notice.msg = "\(slide.title) was added to Watchlist"
                                     }
                                     let encoder = JSONEncoder()
                                     if let encoded = try? encoder.encode(self.listData.list){
                                         UserDefaults.standard.set(encoded, forKey: "user_objects")
-                                        print(self.listData.list)
                                     }
+                                    notice.showToast = true
                                 }){
                                     if(self.listData.list.contains(listItem(ID: slide.ID, type: slide.type, path: slide.path))){
                                         HStack(spacing: 10) {

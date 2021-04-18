@@ -77,6 +77,8 @@ struct ContentView: View {
     @StateObject var homeData = HomeData()
     @State private var showMovie = true
     
+    @EnvironmentObject var notice: Notice
+    
     var body: some View {
         if(homeData.fetched == false){
             ProgressView("Fetching Data...")
@@ -98,7 +100,6 @@ struct ContentView: View {
                                                 .frame(width: 360, height: 290)
                                                 .clipped()
                                                 .blur(radius: 10)
-                                            
                                             KFImage(URL(string: img.path)!)
                                                 .resizable()
                                                 .scaledToFill()
@@ -112,7 +113,6 @@ struct ContentView: View {
                             
                             SlideView(slideList: homeData.topMovie, title: "Top Rated")
                             SlideView(slideList: homeData.popularMovie, title: "Popular")
-                            
                             BottomView()
                         }
                     }
@@ -125,7 +125,11 @@ struct ContentView: View {
                                     self.showMovie = false
                                 }
                         )
-                }.navigationViewStyle(StackNavigationViewStyle())
+                }
+                .toast(isPresented: $notice.showToast){
+                    Text(notice.msg)
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
             }else{
                 NavigationView {
                     ScrollView(.vertical){
@@ -159,6 +163,7 @@ struct ContentView: View {
                             SlideView(slideList: homeData.popularTV, title: "Popular")
                             
                             BottomView()
+        
                         }
                     }
                         .padding(.leading, 20)
@@ -170,7 +175,10 @@ struct ContentView: View {
                                     self.showMovie = true
                                 }
                         )
-                }.navigationViewStyle(StackNavigationViewStyle())
+                }.toast(isPresented: $notice.showToast){
+                    Text(notice.msg)
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
             }
         }
     }
