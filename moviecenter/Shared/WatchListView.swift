@@ -23,7 +23,7 @@ class WatchList: ObservableObject{
 
 
 struct WatchListView: View {
-    @StateObject var listData = WatchList()
+    @EnvironmentObject var listData: WatchList
     
     var body: some View {
         if(listData.list.count == 0){

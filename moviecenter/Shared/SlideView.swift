@@ -10,13 +10,12 @@ import Kingfisher
 import Foundation
 
 struct SlideView: View {
-    @StateObject var listData = WatchList()
-    
     private var slideList: [Slide]
     private var title: String
     
     @EnvironmentObject var notice: Notice
-    
+    @EnvironmentObject var listData: WatchList
+
     init(slideList: [Slide], title: String) {
         self.slideList = slideList
         self.title = title

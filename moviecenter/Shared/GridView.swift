@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct GridView: View {
-    @StateObject var listData = WatchList()
+    @EnvironmentObject var listData: WatchList
     @State private var dragging: listItem?
     
     let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 3)

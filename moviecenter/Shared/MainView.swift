@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject var notice = Notice()
+    @StateObject var listData = WatchList()
+
     @State private var selection = 1
 
     var body: some View {
@@ -25,12 +27,14 @@ struct MainView: View {
                 }
                 .tag(1)
                 .environmentObject(notice)
-            
+                .environmentObject(listData)
+
             WatchListView()
                 .tabItem {
                     Label("WatchList", systemImage: "heart")
                 }
                 .tag(2)
+                .environmentObject(listData)
         }
     }
 }
