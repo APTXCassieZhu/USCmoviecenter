@@ -7,9 +7,35 @@
 
 import SwiftUI
 
+class WatchList: ObservableObject{
+    @Published var list = [listItem]()
+    
+    init(){
+        self.list = [listItem]()
+        if let objects = UserDefaults.standard.value(forKey: "user_objects") as? Data {
+             let decoder = JSONDecoder()
+             if let objectsDecoded = try? decoder.decode(Array.self, from: objects) as [listItem] {
+                self.list = objectsDecoded
+             }
+        }
+    }
+}
+
+
 struct WatchListView: View {
+    @StateObject var listData = WatchList()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        if(listData.list.count == 0){
+            Text("Watchlist is empty")
+                .font(.system(size: 25))
+                .foregroundColor(.gray)
+        }else{
+            NavigationView {
+                GridView()
+                    .navigationTitle("Watchlist")
+            }.navigationViewStyle(StackNavigationViewStyle())
+        }
     }
 }
 

@@ -96,13 +96,13 @@ struct ContentView: View {
                                         ZStack{
                                             KFImage(URL(string: img.path)!)
                                                 .resizable()
-                                                .scaledToFill()
+                                                .aspectRatio(contentMode: .fill)
                                                 .frame(width: 360, height: 290)
                                                 .clipped()
                                                 .blur(radius: 10)
                                             KFImage(URL(string: img.path)!)
                                                 .resizable()
-                                                .scaledToFill()
+                                                .aspectRatio(contentMode: .fill)
                                                 .frame(width: 200, height: 280)
                                                 .clipped()
                                         }

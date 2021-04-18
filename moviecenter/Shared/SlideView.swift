@@ -9,20 +9,6 @@ import SwiftUI
 import Kingfisher
 import Foundation
 
-class WatchList: ObservableObject{
-    @Published var list = [listItem]()
-    
-    init(){
-        self.list = [listItem]()
-        if let objects = UserDefaults.standard.value(forKey: "user_objects") as? Data {
-             let decoder = JSONDecoder()
-             if let objectsDecoded = try? decoder.decode(Array.self, from: objects) as [listItem] {
-                self.list = objectsDecoded
-             }
-        }
-    }
-}
-
 struct SlideView: View {
     @StateObject var listData = WatchList()
     
