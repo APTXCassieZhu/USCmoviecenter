@@ -20,7 +20,7 @@ struct GridView: View {
     
     @State var selected : Int? = nil
     
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 20), count: 3)
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 3)
     
     var body: some View {
         ScrollView{
@@ -34,15 +34,17 @@ struct GridView: View {
                             .onTapGesture {
                                 selected = item.ID
                             }
+                            .onDrag {
+                                self.dragging = item
+                                return NSItemProvider(object: String(item.ID) as NSString)
+                            }
+                            .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, watchlistData: listData, current: $dragging))
                             .contextMenu{
                                 Button(action: {
                                     if let index = self.listData.list.firstIndex(of: item){
                                         self.listData.list.remove(at: index)
                                     }
-                                    let encoder = JSONEncoder()
-                                    if let encoded = try? encoder.encode(self.listData.list){
-                                        UserDefaults.standard.set(encoded, forKey: "user_objects")
-                                    }
+                                    self.listData.save(data: self.listData)
                                 }){
                                     HStack(spacing: 10) {
                                         Image(systemName: "bookmark.fill")
@@ -50,15 +52,11 @@ struct GridView: View {
                                     }
                                 }
                             }
-                    }.frame(width: 115, height: 185)
-                    .onDrag {
-                        self.dragging = item
-                        return NSItemProvider(object: String(item.ID) as NSString)
-                    }
-                    .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, watchlistData: listData, current: $dragging))
+                    }.frame(width: 115, height: 172)
+                    
                 }
             })
-        }.frame(width: 360)
+        }
         .padding(.leading, 20)
         .padding(.trailing, 20)
     }
@@ -71,15 +69,14 @@ struct DropViewDelegate: DropDelegate{
 
     func dropEntered(info: DropInfo) {
         if item != current {
-            withAnimation(.default){
-                let from = watchlistData.list.firstIndex(of: current!)!
-                let to = watchlistData.list.firstIndex(of: item)!
-                if watchlistData.list[to].ID != current!.ID {
-                    watchlistData.list.move(fromOffsets: IndexSet(integer: from),
-                        toOffset: to > from ? to + 1 : to)
-                }
+            let from = watchlistData.list.firstIndex(of: current!)!
+            let to = watchlistData.list.firstIndex(of: item)!
+            if watchlistData.list[to].ID != current!.ID {
+                watchlistData.list.move(fromOffsets: IndexSet(integer: from),
+                    toOffset: to > from ? to + 1 : to)
             }
         }
+        watchlistData.save(data: watchlistData)
     }
 
     func dropUpdated(info: DropInfo) -> DropProposal? {

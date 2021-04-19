@@ -67,10 +67,7 @@ struct SlideView: View {
                                         self.listData.list.append(item)
                                         notice.msg = "\(slide.title) was added to Watchlist"
                                     }
-                                    let encoder = JSONEncoder()
-                                    if let encoded = try? encoder.encode(self.listData.list){
-                                        UserDefaults.standard.set(encoded, forKey: "user_objects")
-                                    }
+                                    self.listData.save(data: self.listData)
                                     notice.showToast = true
                                 }){
                                     if(self.listData.list.contains(listItem(ID: slide.ID, type: slide.type, path: slide.path))){

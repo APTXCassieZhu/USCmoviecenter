@@ -19,6 +19,13 @@ class WatchList: ObservableObject{
              }
         }
     }
+    
+    func save(data: WatchList){
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(data.list){
+            UserDefaults.standard.set(encoded, forKey: "user_objects")
+        }
+    }
 }
 
 
