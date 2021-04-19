@@ -9,26 +9,53 @@ import SwiftUI
 import Kingfisher
 
 struct GridView: View {
-    @EnvironmentObject var listData: WatchList
+    private var listData: WatchList
     @State private var dragging: listItem?
     
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 3)
+    init(listData: WatchList){
+        self.listData = listData
+    }
+    
+    @State var selected : Int? = nil
+    
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 3)
     
     var body: some View {
         ScrollView{
-            LazyVGrid(columns: columns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 2, content: {
-                ForEach(listData.list, id: \.self){ listitem in
-                    NavigationLink(destination: DetailView(ID: listitem.ID, type: listitem.type)){
-                        KFImage(URL(string: listitem.path)!)
+            LazyVGrid(columns: columns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, content: {
+                ForEach(listData.list, id: \.self){ item in
+                    NavigationLink(destination: DetailView(ID: item.ID, type: item.type), tag: item.ID, selection: $selected){
+                        KFImage(URL(string: item.path)!)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 118, height: 180)
                             .clipped()
+                            .frame(width: 115, height: 185)
+                            .onTapGesture {
+                                selected = item.ID
+                            }
+                            .contextMenu{
+                                Button(action: {
+                                    if let index = self.listData.list.firstIndex(of: item){
+                                        self.listData.list.remove(at: index)
+                                    }
+                                    let encoder = JSONEncoder()
+                                    if let encoded = try? encoder.encode(self.listData.list){
+                                        UserDefaults.standard.set(encoded, forKey: "user_objects")
+                                    }
+                                }){
+                                    HStack(spacing: 10) {
+                                        Image(systemName: "bookmark.fill")
+                                        Text("Remove from watchList")
+                                    }
+                                }
+                            }
                     }
 //                    .onDrag {
 //                        return NSItemProvider(object: String(id) as NSString)
 //                    }
-//                    .onDrop(of: listItem, delegate: DropViewDelegate(item: listitem, watchlistData: $listData.list, current: $dragging))
+//                    .onDrop(of: listItem, delegate: DropViewDelegate(item: item, watchlistData: $listData.list, current: $dragging))
+                    
+                    
                 }
             }).frame(width: 360)
             .padding(.leading, 20)
@@ -63,8 +90,8 @@ struct DropViewDelegate: DropDelegate{
     }
 }
 
-struct GridView_Previews: PreviewProvider {
-    static var previews: some View {
-        GridView()
-    }
-}
+//struct GridView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        GridView()
+//    }
+//}

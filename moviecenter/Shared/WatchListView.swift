@@ -32,7 +32,7 @@ struct WatchListView: View {
                 .foregroundColor(.gray)
         }else{
             NavigationView {
-                GridView()
+                GridView(listData: listData)
                     .navigationTitle("Watchlist")
             }.navigationViewStyle(StackNavigationViewStyle())
         }
