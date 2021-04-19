@@ -21,7 +21,7 @@ struct SlideView: View {
         self.title = title
     }
     
-    @State var selected : Int? = nil
+    @State var selected : String? = nil
     
     var body: some View {
         VStack(alignment: .leading){
@@ -83,7 +83,7 @@ struct SlideView: View {
                                     }
                                 }
                                 Button(action: {
-                                    let formattedString = "https://www.facebook.com/sharer/sharer.php?u=https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
+                                    let formattedString = "https://www.facebook.com/sharer/sharer.php?u=https://www.themoviedb.org/\(slide.type)/\(slide.ID)"
                                     guard let url = URL(string: formattedString) else { return }
                                     UIApplication.shared.open(url)
                                 }){
@@ -95,7 +95,7 @@ struct SlideView: View {
                                     }
                                 }
                                 Button(action: {
-                                    let tmdburl = "https://www.themoviedb.org/"+slide.type+"/\(slide.ID)"
+                                    let tmdburl = "https://www.themoviedb.org/\(slide.type)/\(slide.ID)"
                                     let formattedString = "https://twitter.com/intent/tweet?text=Check%20out%20this%20link:%20"+tmdburl+"&hashtags=CSCI571USCFilms"
                                     guard let url = URL(string: formattedString) else { return }
                                     UIApplication.shared.open(url)

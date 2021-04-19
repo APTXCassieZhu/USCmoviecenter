@@ -18,7 +18,7 @@ struct GridView: View {
         self.listData = listData
     }
     
-    @State var selected : Int? = nil
+    @State var selected : String? = nil
     
     let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 3)
     

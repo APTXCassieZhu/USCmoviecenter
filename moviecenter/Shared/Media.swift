@@ -8,12 +8,12 @@
 import Foundation
 
 struct Media : Hashable{
-    var ID: Int
+    var ID: String
     var title: String
     var type: String
     var path: String
     
-    init(ID: Int, title: String, type: String, path: String){
+    init(ID: String, title: String, type: String, path: String){
         self.ID = ID
         self.title = title
         self.type = type
@@ -22,13 +22,13 @@ struct Media : Hashable{
 }
 
 struct Slide : Hashable {
-    var ID: Int
+    var ID: String
     var title: String
     var type: String
     var path: String
     var date: String
     
-    init(ID: Int, title: String, type: String, path: String, date: String){
+    init(ID: String, title: String, type: String, path: String, date: String){
         self.ID = ID
         self.title = title
         self.type = type
@@ -52,14 +52,34 @@ struct Video : Hashable {
     }
 }
 
+// for local storage
 struct listItem : Hashable, Encodable, Decodable{
-    var ID: Int
+    var ID: String
     var type: String
     var path: String
     
-    init(ID: Int, type: String, path: String){
+    init(ID: String, type: String, path: String){
         self.ID = ID
         self.type = type
         self.path = path
     }
+}
+
+struct Detail : Hashable{
+    var ID: String
+    var type: String
+    var title: String
+    var date: String
+    var starRate: Double
+    var overview: String
+    var genres: String
+    var imgPath: String
+}
+
+struct Cast : Hashable{
+    
+}
+
+struct Review : Hashable{
+    
 }
