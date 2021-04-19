@@ -18,7 +18,7 @@ struct GridView: View {
     
     @State var selected : Int? = nil
     
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 3)
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 20), count: 3)
     
     var body: some View {
         ScrollView{
@@ -29,7 +29,6 @@ struct GridView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .clipped()
-                            .frame(width: 115, height: 185)
                             .onTapGesture {
                                 selected = item.ID
                             }
@@ -49,18 +48,17 @@ struct GridView: View {
                                     }
                                 }
                             }
-                    }
+                    }.frame(width: 115, height: 185)
+
 //                    .onDrag {
 //                        return NSItemProvider(object: String(id) as NSString)
 //                    }
-//                    .onDrop(of: listItem, delegate: DropViewDelegate(item: item, watchlistData: $listData.list, current: $dragging))
-                    
-                    
+//                    .onDrop(of: listItem, delegate: DropViewDelegate(item: item, watchlistData: $self.listData.list, current: $dragging))
                 }
-            }).frame(width: 360)
-            .padding(.leading, 20)
-            .padding(.trailing, 20)
-        }
+            })
+        }.frame(width: 360)
+        .padding(.leading, 20)
+        .padding(.trailing, 20)
     }
 }
 
