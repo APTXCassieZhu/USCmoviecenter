@@ -7,6 +7,8 @@
  
 import SwiftUI
 import Kingfisher
+import UniformTypeIdentifiers
+
 
 struct GridView: View {
     private var listData: WatchList
@@ -49,11 +51,11 @@ struct GridView: View {
                                 }
                             }
                     }.frame(width: 115, height: 185)
-
-//                    .onDrag {
-//                        return NSItemProvider(object: String(id) as NSString)
-//                    }
-//                    .onDrop(of: listItem, delegate: DropViewDelegate(item: item, watchlistData: $self.listData.list, current: $dragging))
+                    .onDrag {
+                        self.dragging = item
+                        return NSItemProvider(object: String(item.ID) as NSString)
+                    }
+                    .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, watchlistData: listData, current: $dragging))
                 }
             })
         }.frame(width: 360)
@@ -64,16 +66,18 @@ struct GridView: View {
 
 struct DropViewDelegate: DropDelegate{
     let item: listItem
-    @Binding var watchlistData: [listItem]
+    @State var watchlistData: WatchList
     @Binding var current: listItem?
 
     func dropEntered(info: DropInfo) {
         if item != current {
-            let from = watchlistData.firstIndex(of: current!)!
-            let to = watchlistData.firstIndex(of: item)!
-            if watchlistData[to].ID != current!.ID {
-                watchlistData.move(fromOffsets: IndexSet(integer: from),
-                    toOffset: to > from ? to + 1 : to)
+            withAnimation(.default){
+                let from = watchlistData.list.firstIndex(of: current!)!
+                let to = watchlistData.list.firstIndex(of: item)!
+                if watchlistData.list[to].ID != current!.ID {
+                    watchlistData.list.move(fromOffsets: IndexSet(integer: from),
+                        toOffset: to > from ? to + 1 : to)
+                }
             }
         }
     }
