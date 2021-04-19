@@ -14,7 +14,8 @@ struct YTWrapper : UIViewRepresentable{
     
     func makeUIView(context: Context) -> YTPlayerView {
         let playerView = YTPlayerView()
-        playerView.load(withVideoId: videoID);
+        let playvarsDic = ["controls": 1, "playsinline": 1, "showinfo": 1, "autoplay": 0]
+        playerView.load(withVideoId: videoID, playerVars: playvarsDic);
         return playerView
     }
     func updateUIView(_ uiView: YTPlayerView, context: Context) {
