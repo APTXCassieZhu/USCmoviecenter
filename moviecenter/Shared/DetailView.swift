@@ -89,8 +89,8 @@ struct DetailView: View {
                                 .foregroundColor(.red)
                             Text("\(self.detail?.starRate ?? "0.0")/5.0")
                         }
-                        Text(self.detail?.overview ?? "")
-                            .lineLimit(3)
+                        ShowMoreLessView(text: self.detail?.overview ?? "")
+
                         if(self.castList.count != 0){
                             Text("Cast & Crew")
                                 .font(.system(size: 23, design: .rounded))
@@ -134,9 +134,9 @@ struct DetailView: View {
                                             .lineLimit(3)
                                             .foregroundColor(.black)
                                             .fixedSize(horizontal: false, vertical: true)
-                                            .frame(width: 330, alignment: .topLeading)
+                                            .frame(width: 350, alignment: .topLeading)
                                     }.padding(10)
-                                    .frame(width: 350)
+                                    .frame(width: 360)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 10)
                                             .stroke(Color.gray, lineWidth: 1)
