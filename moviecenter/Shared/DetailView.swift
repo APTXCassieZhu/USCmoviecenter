@@ -34,7 +34,7 @@ struct DetailView: View {
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/detail/\(self.type)/\(self.ID)").responseData{
             (data) in
             let json = try! JSON(data: data.data!)
-            let rate = String(format:"%.2f", json["vote_average"].doubleValue/2)
+            let rate = String(format:"%.1f", json["vote_average"].doubleValue/2)
             self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: rate, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
             self.item = listItem(ID: self.ID, type: self.type, path: json["poster_path"].stringValue)
             AF.request("https://ruiqi571.wl.r.appspot.com/ios/video/\(self.type)/\(self.ID)").responseData{
@@ -53,7 +53,7 @@ struct DetailView: View {
                         (data) in
                         let json = try! JSON(data: data.data!)
                         for i in json{
-                            let rate = String(format:"%.2f", i.1["author_details"]["rating"].doubleValue/2)
+                            let rate = String(format:"%.1f", i.1["author_details"]["rating"].doubleValue/2)
                             self.reviewList.append(Review(author: i.1["author"].stringValue, date: i.1["created_at"].stringValue, starRate:  rate, content: i.1["content"].stringValue))
                         }
                         AF.request("https://ruiqi571.wl.r.appspot.com/ios/recommend/\(self.type)/\(self.ID)").responseData{
@@ -90,6 +90,7 @@ struct DetailView: View {
                             Text("\(self.detail?.starRate ?? "0.0")/5.0")
                         }
                         Text(self.detail?.overview ?? "")
+                            .lineLimit(3)
                         if(self.castList.count != 0){
                             Text("Cast & Crew")
                                 .font(.system(size: 23, design: .rounded))
@@ -115,9 +116,31 @@ struct DetailView: View {
                                 .font(.system(size: 23, design: .rounded))
                                 .fontWeight(.bold)
                             ForEach(self.reviewList,  id: \.self){ review in
-                                NavigationLink(destination: DetailView(ID: self.ID, type: self.type)){
-                                }.border(Color.gray, width: 1)
-                                .cornerRadius(10)
+                                NavigationLink(destination: ReviewView(review: review, title: self.detail?.title ?? "Unknown")){
+                                    VStack(alignment: .leading){
+                                        Text("A review by \(review.author)")
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.black)
+                                        Text("Written by \(review.author) on \(review.date)")
+                                            .foregroundColor(.gray)
+                                        HStack{
+                                            Image(systemName: "star.fill")
+                                                .foregroundColor(.red)
+                                            Text("\(review.starRate)/5.0")
+                                                .foregroundColor(.black)
+                                        }.padding(.top, 5)
+                                        .padding(.bottom, 5)
+                                        Text(review.content)
+                                            .lineLimit(3)
+                                            .foregroundColor(.black)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }.padding(10)
+                                    .frame(width: 350)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color.gray, lineWidth: 1)
+                                    )
+                                }
                             }
                         }
                         if(self.recommendList.count != 0){
