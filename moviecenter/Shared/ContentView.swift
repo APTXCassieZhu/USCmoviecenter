@@ -21,7 +21,6 @@ class HomeData: ObservableObject{
     
 
     init(){
-
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/now_playing").responseData{
             (data) in
             let json = try! JSON(data: data.data!)

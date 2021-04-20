@@ -34,8 +34,7 @@ struct DetailView: View {
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/detail/\(self.type)/\(self.ID)").responseData{
             (data) in
             let json = try! JSON(data: data.data!)
-            let rate = String(format:"%.1f", json["vote_average"].doubleValue/2)
-            self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: rate, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
+            self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: json["vote_average"].stringValue, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
             self.item = listItem(ID: self.ID, type: self.type, path: json["poster_path"].stringValue)
             AF.request("https://ruiqi571.wl.r.appspot.com/ios/video/\(self.type)/\(self.ID)").responseData{
                 (data) in
@@ -53,8 +52,7 @@ struct DetailView: View {
                         (data) in
                         let json = try! JSON(data: data.data!)
                         for i in json{
-                            let rate = String(format:"%.1f", i.1["author_details"]["rating"].doubleValue/2)
-                            self.reviewList.append(Review(author: i.1["author"].stringValue, date: i.1["created_at"].stringValue, starRate:  rate, content: i.1["content"].stringValue))
+                            self.reviewList.append(Review(author: i.1["author"].stringValue, date: i.1["created_at"].stringValue, starRate:  i.1["author_details"]["rating"].stringValue, content: i.1["content"].stringValue))
                         }
                         AF.request("https://ruiqi571.wl.r.appspot.com/ios/recommend/\(self.type)/\(self.ID)").responseData{
                             (data) in

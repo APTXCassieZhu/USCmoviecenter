@@ -6,21 +6,35 @@
 //
 
 import SwiftUI
+import Alamofire
+import SwiftyJSON
+
+class SearchVM: ObservableObject{
+    @Published var searchResult = [SearchItem]()
+    
+    func search(query: String){
+        self.searchResult = [SearchItem]()
+        print(query)
+        AF.request("https://ruiqi571.wl.r.appspot.com/ios/search/\(query)").responseData{
+            (data) in
+            let json = try! JSON(data: data.data!)
+            for i in json["resultList"]{
+                self.searchResult.append(SearchItem(ID: i.1["id"].stringValue, type: i.1["media_type"].stringValue, title: i.1["title"].stringValue, date: i.1["date"].stringValue, imgPath: i.1["backdrop_path"].stringValue, starRate: i.1["vote_average"].stringValue))
+            }
+        }
+    }
+}
 
 struct SearchView: View {
     @State private var searchText : String = ""
+    @ObservedObject var searchVM : SearchVM = SearchVM()
     
     var body: some View {
         NavigationView {
             VStack{
-                SearchBar(text: $searchText)
+                SearchBar(searchVM: self.searchVM, text: $searchText)
                 ScrollView(.vertical){
-                    Text("lalala")
-                    Text("lalala")
-                    Text("lalala")
-                    Text("lalala")
-                    Text("lalala")
-                    Text("lalala")
+                    SearchResultView(searchVM: searchVM)
                 }
             }
             .navigationTitle("Search")
@@ -29,7 +43,7 @@ struct SearchView: View {
 }
 
 struct SearchBar: UIViewRepresentable {
-
+    @State var searchVM : SearchVM
     @Binding var text: String
 
     class Coordinator: NSObject, UISearchBarDelegate {
@@ -81,6 +95,10 @@ struct SearchBar: UIViewRepresentable {
 
     func updateUIView(_ uiView: UISearchBar, context: UIViewRepresentableContext<SearchBar>) {
         uiView.text = text
+        if(self.text.count > 2){
+            searchVM.search(query: self.text)
+            print(searchVM.searchResult)
+        }
     }
 }
 

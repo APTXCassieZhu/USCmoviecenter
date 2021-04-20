@@ -88,3 +88,12 @@ struct Review : Hashable{
     var starRate: String
     var content: String
 }
+
+struct SearchItem: Hashable{
+    var ID: String
+    var type: String
+    var title: String
+    var date: String
+    var imgPath: String
+    var starRate: String
+}
