@@ -134,6 +134,7 @@ struct DetailView: View {
                                             .lineLimit(3)
                                             .foregroundColor(.black)
                                             .fixedSize(horizontal: false, vertical: true)
+                                            .frame(width: 330, alignment: .topLeading)
                                     }.padding(10)
                                     .frame(width: 350)
                                     .overlay(
