@@ -70,7 +70,7 @@ struct Detail : Hashable{
     var type: String
     var title: String
     var date: String
-    var starRate: Double
+    var starRate: String
     var overview: String
     var genres: String
     var imgPath: String

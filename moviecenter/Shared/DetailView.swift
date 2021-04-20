@@ -30,7 +30,8 @@ struct DetailView: View {
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/detail/\(self.type)/\(self.ID)").responseData{
             (data) in
             let json = try! JSON(data: data.data!)
-            self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: json["vote_average"].doubleValue/2, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
+            let rate = String(format:"%.2f", json["vote_average"].doubleValue/2)
+            self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: rate, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
             self.item = listItem(ID: self.ID, type: self.type, path: json["poster_path"].stringValue)
             AF.request("https://ruiqi571.wl.r.appspot.com/ios/video/\(self.type)/\(self.ID)").responseData{
                 (data) in
@@ -53,7 +54,11 @@ struct DetailView: View {
                             .font(.system(size: 28))
                             .fontWeight(.bold)
                         Text("\(self.detail?.date ?? "N/A") | \(self.detail?.genres ?? "N/A")")
-
+                        HStack{
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.red)
+                            Text("\(self.detail?.starRate ?? "0.0")/5.0")
+                        }
                         Text(self.detail?.overview ?? "")
                         Text("Cast & Crew")
                             .font(.system(size: 23, design: .rounded))
@@ -62,9 +67,11 @@ struct DetailView: View {
                             
                         }
                         Text("Reviews")
+                            .font(.system(size: 23, design: .rounded))
+                            .fontWeight(.bold)
                     }
-                }.padding(.leading, 20)
-                .padding(.trailing, 20)
+                }.padding(.leading, 17)
+                .padding(.trailing, 17)
                 .navigationBarItems(
                 trailing:
                     HStack{
