@@ -77,9 +77,14 @@ struct Detail : Hashable{
 }
 
 struct Cast : Hashable{
-    
+    var ID: String
+    var name: String
+    var path: String
 }
 
 struct Review : Hashable{
-    
+    var author: String
+    var date: String
+    var starRate: String
+    var content: String
 }

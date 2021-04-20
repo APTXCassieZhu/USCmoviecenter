@@ -8,6 +8,7 @@
 import SwiftUI
 import Alamofire
 import SwiftyJSON
+import Kingfisher
 
 struct DetailView: View {
     @EnvironmentObject var listData: WatchList
@@ -16,6 +17,9 @@ struct DetailView: View {
     @State var detail : Detail?
     @State var video : Video = Video(site: "Youtube", type: "fake", name: "undefined", key: "tzkWB85ULJY")
     @State var item : listItem = listItem(ID: "", type: "", path: "https://cinemaone.net/images/movie_placeholder.png")
+    @State var castList: [Cast] = []
+    @State var reviewList: [Review] = []
+    @State var recommendList: [listItem] = []
     
     private var ID: String
     private var type: String
@@ -36,8 +40,32 @@ struct DetailView: View {
             AF.request("https://ruiqi571.wl.r.appspot.com/ios/video/\(self.type)/\(self.ID)").responseData{
                 (data) in
                 let json = try! JSON(data: data.data!)
+                print(self.ID)
                 self.video = Video(site: json["site"].stringValue, type: json["type"].stringValue, name: json["name"].stringValue, key: json["key"].stringValue)
-                self.fetched = true
+                AF.request("https://ruiqi571.wl.r.appspot.com/ios/cast/\(self.type)/\(self.ID)").responseData{
+                    (data) in
+                    let json = try! JSON(data: data.data!)
+                    for i in json["castList"]{
+                        self.castList.append(Cast(ID: i.1["id"].stringValue, name: i.1["name"].stringValue, path: i.1["profile_path"].stringValue)
+                        )
+                    }
+                    AF.request("https://ruiqi571.wl.r.appspot.com/ios/review/\(self.type)/\(self.ID)").responseData{
+                        (data) in
+                        let json = try! JSON(data: data.data!)
+                        for i in json{
+                            let rate = String(format:"%.2f", i.1["author_details"]["rating"].doubleValue/2)
+                            self.reviewList.append(Review(author: i.1["author"].stringValue, date: i.1["created_at"].stringValue, starRate:  rate, content: i.1["content"].stringValue))
+                        }
+                        AF.request("https://ruiqi571.wl.r.appspot.com/ios/recommend/\(self.type)/\(self.ID)").responseData{
+                            (data) in
+                            let json = try! JSON(data: data.data!)
+                            for i in json["resultList"]{
+                                self.recommendList.append(listItem(ID: i.1["id"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
+                            }
+                            self.fetched = true
+                        }
+                    }
+                }
             }
         }
     }
@@ -49,7 +77,9 @@ struct DetailView: View {
         }else{
                 ScrollView(.vertical){
                     VStack(alignment: .leading, spacing: 10){
-                        YouTubeView(key: video.key)
+                        if(video.type != "fake"){
+                            YouTubeView(key: video.key)
+                        }
                         Text(self.detail?.title ?? "Unknown")
                             .font(.system(size: 28))
                             .fontWeight(.bold)
@@ -60,15 +90,60 @@ struct DetailView: View {
                             Text("\(self.detail?.starRate ?? "0.0")/5.0")
                         }
                         Text(self.detail?.overview ?? "")
-                        Text("Cast & Crew")
-                            .font(.system(size: 23, design: .rounded))
-                            .fontWeight(.bold)
-                        HStack{
-                            
+                        if(self.castList.count != 0){
+                            Text("Cast & Crew")
+                                .font(.system(size: 23, design: .rounded))
+                                .fontWeight(.bold)
+                            ScrollView(.horizontal){
+                                HStack{
+                                    ForEach(self.castList,  id: \.self){ cast in
+                                        VStack{
+                                            KFImage(URL(string: cast.path)!)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: 95, height: 140)
+                                                .clipShape(Circle())
+                                            Text(cast.name)
+                                                .font(.system(size:14))
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        Text("Reviews")
-                            .font(.system(size: 23, design: .rounded))
-                            .fontWeight(.bold)
+                        if(self.reviewList.count != 0){
+                            Text("Reviews")
+                                .font(.system(size: 23, design: .rounded))
+                                .fontWeight(.bold)
+                            ForEach(self.reviewList,  id: \.self){ review in
+                                NavigationLink(destination: DetailView(ID: self.ID, type: self.type)){
+                                }.border(Color.gray, width: 1)
+                                .cornerRadius(10)
+                            }
+                        }
+                        if(self.recommendList.count != 0){
+                            if(self.type == "movie"){
+                                Text("Recomended Movies")
+                                    .font(.system(size: 23, design: .rounded))
+                                    .fontWeight(.bold)
+                            }else{
+                                Text("Recomended TV shows")
+                                    .font(.system(size: 23, design: .rounded))
+                                    .fontWeight(.bold)
+                            }
+                            ScrollView(.horizontal){
+                                HStack(alignment: .top, spacing: 28.5) {
+                                    ForEach(self.recommendList,  id: \.self){ slide in
+                                        NavigationLink(destination: DetailView(ID: slide.ID, type: slide.type)){
+                                            KFImage(URL(string: slide.path)!)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: 110, height: 160)
+                                                .cornerRadius(10)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }.padding(.leading, 17)
                 .padding(.trailing, 17)
