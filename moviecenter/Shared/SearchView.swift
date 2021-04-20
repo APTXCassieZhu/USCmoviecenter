@@ -8,16 +8,18 @@
 import SwiftUI
 import Alamofire
 import SwiftyJSON
+import Kingfisher
 
 class SearchVM: ObservableObject{
     @Published var searchResult = [SearchItem]()
+    @Published var label = ""
     
     func search(query: String){
-        self.searchResult = [SearchItem]()
-        print(query)
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/search/\(query)").responseData{
             (data) in
             let json = try! JSON(data: data.data!)
+            self.searchResult = [SearchItem]()
+            self.label = "No Results"
             for i in json["resultList"]{
                 self.searchResult.append(SearchItem(ID: i.1["id"].stringValue, type: i.1["media_type"].stringValue, title: i.1["title"].stringValue, date: i.1["date"].stringValue, imgPath: i.1["backdrop_path"].stringValue, starRate: i.1["vote_average"].stringValue))
             }
@@ -34,7 +36,10 @@ struct SearchView: View {
             VStack{
                 SearchBar(searchVM: self.searchVM, text: $searchText)
                 ScrollView(.vertical){
-                    SearchResultView(searchVM: searchVM)
+                    Text(self.searchVM.test)
+                    ForEach(self.searchVM.searchResult, id: \.self){ result in
+                        Text(result.title)
+                    }
                 }
             }
             .navigationTitle("Search")
@@ -97,7 +102,6 @@ struct SearchBar: UIViewRepresentable {
         uiView.text = text
         if(self.text.count > 2){
             searchVM.search(query: self.text)
-            print(searchVM.searchResult)
         }
     }
 }
