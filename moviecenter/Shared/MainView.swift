@@ -36,6 +36,7 @@ struct MainView: View {
                     Label("WatchList", systemImage: "heart")
                 }
                 .tag(2)
+                .environmentObject(notice)
                 .environmentObject(listData)
         }
     }

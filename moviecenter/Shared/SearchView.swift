@@ -15,6 +15,7 @@ class SearchVM: ObservableObject{
     @Published var label = ""
     
     func search(query: String){
+        print("https://ruiqi571.wl.r.appspot.com/ios/search/\(query)")
         self.label = ""
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/search/\(query)").responseData{
             (data) in
@@ -104,9 +105,11 @@ struct SearchBar: UIViewRepresentable {
     class Coordinator: NSObject, UISearchBarDelegate {
 
         @Binding var text: String
+        @Binding var searchVM: SearchVM
 
-        init(text: Binding<String>) {
+        init(text: Binding<String>, searchVM: Binding<SearchVM>) {
             _text = text
+            _searchVM = searchVM
         }
 
         func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -131,12 +134,13 @@ struct SearchBar: UIViewRepresentable {
 
         func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
             searchBar.text = ""
+            self.searchVM.searchResult = [SearchItem]()
             searchBar.endEditing(true)
         }
     }
 
     func makeCoordinator() -> SearchBar.Coordinator {
-        return Coordinator(text: $text)
+        return Coordinator(text: $text, searchVM:$searchVM)
     }
 
     func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
