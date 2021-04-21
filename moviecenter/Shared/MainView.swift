@@ -20,6 +20,8 @@ struct MainView: View {
                     Label("Search", systemImage:"magnifyingglass")
                 }
                 .tag(0)
+                .environmentObject(notice)
+                .environmentObject(listData)
             
             ContentView()
                 .tabItem {
