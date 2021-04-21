@@ -179,6 +179,9 @@ struct DetailView: View {
                 }
             }.padding(.leading, 17)
             .padding(.trailing, 17)
+            .toast(isPresented: $notice.showToast){
+                Text(notice.msg)
+            }
             .navigationBarItems(
             trailing:
                 HStack{

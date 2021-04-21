@@ -33,7 +33,7 @@ struct ShowMoreLessView: View {
             context: nil
         )
 
-        if total.size.height > geometry.size.height {
+        if total.size.height > geometry.size.height + 6 {
             self.truncated = true
         }
     }

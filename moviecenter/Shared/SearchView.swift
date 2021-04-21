@@ -37,7 +37,7 @@ class SearchVM: ObservableObject{
 
 struct SearchView: View {
     @State private var searchText : String = ""
-    @ObservedObject var searchVM : SearchVM = SearchVM()
+    @StateObject var searchVM : SearchVM = SearchVM()
     @EnvironmentObject var notice: Notice
     @EnvironmentObject var listData: WatchList
 
@@ -45,7 +45,7 @@ struct SearchView: View {
     var body: some View {
         NavigationView {
             VStack{
-                SearchBar(searchVM: self.searchVM, text: $searchText)
+                SearchBar(searchVM: searchVM, text: $searchText)
                 ScrollView(.vertical){
                     if(self.searchVM.label == ""){
                         LazyVStack(spacing: 10) {
@@ -101,7 +101,8 @@ struct SearchView: View {
                 .padding(.trailing, 20)
             }
             .navigationTitle("Search")
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
