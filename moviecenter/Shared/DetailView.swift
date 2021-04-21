@@ -33,34 +33,42 @@ struct DetailView: View {
         self.fetched = false
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/video/\(self.type)/\(self.ID)").responseData{
             (data) in
-            let json = try! JSON(data: data.data!)
-            print(self.ID)
-            self.video = Video(site: json["site"].stringValue, type: json["type"].stringValue, name: json["name"].stringValue, key: json["key"].stringValue)
-            
+            if(data.data != nil){
+                let json = try! JSON(data: data.data!)
+                print(self.ID)
+                self.video = Video(site: json["site"].stringValue, type: json["type"].stringValue, name: json["name"].stringValue, key: json["key"].stringValue)
+            }
             AF.request("https://ruiqi571.wl.r.appspot.com/ios/detail/\(self.type)/\(self.ID)").responseData{
                 (data) in
-                let json = try! JSON(data: data.data!)
-                self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: json["vote_average"].stringValue, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
-                self.item = listItem(ID: self.ID, type: self.type, path: json["poster_path"].stringValue)
-            
+                if(data.data != nil){
+                    let json = try! JSON(data: data.data!)
+                    self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: json["vote_average"].stringValue, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
+                    self.item = listItem(ID: self.ID, type: self.type, path: json["poster_path"].stringValue)
+                }
                 AF.request("https://ruiqi571.wl.r.appspot.com/ios/cast/\(self.type)/\(self.ID)").responseData{
                     (data) in
-                    let json = try! JSON(data: data.data!)
-                    for i in json["castList"]{
-                        self.castList.append(Cast(ID: i.1["id"].stringValue, name: i.1["name"].stringValue, path: i.1["profile_path"].stringValue)
-                        )
+                    if(data.data != nil){
+                        let json = try! JSON(data: data.data!)
+                        for i in json["castList"]{
+                            self.castList.append(Cast(ID: i.1["id"].stringValue, name: i.1["name"].stringValue, path: i.1["profile_path"].stringValue)
+                            )
+                        }
                     }
                     AF.request("https://ruiqi571.wl.r.appspot.com/ios/review/\(self.type)/\(self.ID)").responseData{
                         (data) in
-                        let json = try! JSON(data: data.data!)
-                        for i in json{
-                            self.reviewList.append(Review(author: i.1["author"].stringValue, date: i.1["created_at"].stringValue, starRate:  i.1["author_details"]["rating"].stringValue, content: i.1["content"].stringValue))
+                        if(data.data != nil){
+                            let json = try! JSON(data: data.data!)
+                            for i in json{
+                                self.reviewList.append(Review(author: i.1["author"].stringValue, date: i.1["created_at"].stringValue, starRate:  i.1["author_details"]["rating"].stringValue, content: i.1["content"].stringValue))
+                            }
                         }
                         AF.request("https://ruiqi571.wl.r.appspot.com/ios/recommend/\(self.type)/\(self.ID)").responseData{
                             (data) in
-                            let json = try! JSON(data: data.data!)
-                            for i in json["resultList"]{
-                                self.recommendList.append(listItem(ID: i.1["id"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
+                            if(data.data != nil){
+                                let json = try! JSON(data: data.data!)
+                                for i in json["resultList"]{
+                                    self.recommendList.append(listItem(ID: i.1["id"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
+                                }
                             }
                             self.fetched = true
                         }

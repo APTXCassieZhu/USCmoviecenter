@@ -23,45 +23,56 @@ class HomeData: ObservableObject{
     init(){
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/now_playing").responseData{
             (data) in
-            let json = try! JSON(data: data.data!)
-            for i in json["results"]{
-                self.nowPlay.append(Media(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["backdrop_path"].stringValue))
+            if(data.data != nil){
+                let json = try! JSON(data: data.data!)
+                for i in json["results"]{
+                    self.nowPlay.append(Media(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["backdrop_path"].stringValue))
+                }
             }
             AF.request("https://ruiqi571.wl.r.appspot.com/ios/toprated/movie").responseData{
                 (data) in
-                let json = try! JSON(data: data.data!)
-                for i in json["results"]{
-                    self.topMovie.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
-                    ))
+                if(data.data != nil){
+                    let json = try! JSON(data: data.data!)
+                    for i in json["results"]{
+                        self.topMovie.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
+                        ))
+                    }
                 }
                 AF.request("https://ruiqi571.wl.r.appspot.com/ios/popular/movie").responseData{
                     (data) in
-                    let json = try! JSON(data: data.data!)
-                    for i in json["results"]{
-                        self.popularMovie.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
-                        ))
+                    if(data.data != nil){
+                        let json = try! JSON(data: data.data!)
+                        for i in json["results"]{
+                            self.popularMovie.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
+                            ))
+                        }
                     }
                     AF.request("https://ruiqi571.wl.r.appspot.com/ios/trending/tv").responseData{
                         (data) in
-                        let json = try! JSON(data: data.data!)
-                        for i in json["results"]{
-                            self.trending.append(Media(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
+                        if(data.data != nil){
+                            let json = try! JSON(data: data.data!)
+                            for i in json["results"]{
+                                self.trending.append(Media(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue))
+                            }
                         }
                         AF.request("https://ruiqi571.wl.r.appspot.com/ios/toprated/tv").responseData{
                             (data) in
-                            let json = try! JSON(data: data.data!)
-                            for i in json["results"]{
-                                self.topTV.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
-                                ))
+                            if(data.data != nil){
+                                let json = try! JSON(data: data.data!)
+                                for i in json["results"]{
+                                    self.topTV.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
+                                    ))
+                                }
                             }
                             AF.request("https://ruiqi571.wl.r.appspot.com/ios/popular/tv").responseData{
                                 (data) in
-                                let json = try! JSON(data: data.data!)
-                                for i in json["results"]{
-                                    self.popularTV.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
-                                    ))
+                                if(data.data != nil){
+                                    let json = try! JSON(data: data.data!)
+                                    for i in json["results"]{
+                                        self.popularTV.append(Slide(ID: i.1["id"].stringValue, title: i.1["title"].stringValue, type: i.1["media_type"].stringValue, path: i.1["poster_path"].stringValue, date: i.1["date"].stringValue
+                                        ))
+                                    }
                                 }
-                                
                                 self.fetched = true;
                             }
                         }
