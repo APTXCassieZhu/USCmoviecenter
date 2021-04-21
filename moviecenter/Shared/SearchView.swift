@@ -15,17 +15,21 @@ class SearchVM: ObservableObject{
     @Published var label = ""
     
     func search(query: String){
-        print("https://ruiqi571.wl.r.appspot.com/ios/search/\(query)")
         self.label = ""
         AF.request("https://ruiqi571.wl.r.appspot.com/ios/search/\(query)").responseData{
             (data) in
-            let json = try! JSON(data: data.data!)
-            self.searchResult = [SearchItem]()
-            if(json["resultList"].count == 0){
+            print(query)
+            if(data.data == nil){
                 self.label = "No Results"
-            }
-            for i in json["resultList"]{
-                self.searchResult.append(SearchItem(ID: i.1["id"].stringValue, type: i.1["media_type"].stringValue, title: i.1["title"].stringValue, date: i.1["date"].stringValue, imgPath: i.1["backdrop_path"].stringValue, starRate: i.1["vote_average"].stringValue))
+            }else{
+                let json = try! JSON(data: data.data!)
+                self.searchResult = [SearchItem]()
+                if(json["resultList"].count == 0){
+                    self.label = "No Results"
+                }
+                for i in json["resultList"]{
+                    self.searchResult.append(SearchItem(ID: i.1["id"].stringValue, type: i.1["media_type"].stringValue, title: i.1["title"].stringValue, date: i.1["date"].stringValue, imgPath: i.1["backdrop_path"].stringValue, starRate: i.1["vote_average"].stringValue))
+                }
             }
         }
     }
@@ -34,6 +38,9 @@ class SearchVM: ObservableObject{
 struct SearchView: View {
     @State private var searchText : String = ""
     @ObservedObject var searchVM : SearchVM = SearchVM()
+    @EnvironmentObject var notice: Notice
+    @EnvironmentObject var listData: WatchList
+
     
     var body: some View {
         NavigationView {
@@ -155,7 +162,10 @@ struct SearchBar: UIViewRepresentable {
     func updateUIView(_ uiView: UISearchBar, context: UIViewRepresentableContext<SearchBar>) {
         uiView.text = text
         if(self.text.count > 2){
-            searchVM.search(query: self.text)
+            let debouncer = Debouncer(delay: 1)
+            debouncer.run(action: {
+                searchVM.search(query: self.text)
+            })
         }
     }
 }

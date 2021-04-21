@@ -31,16 +31,18 @@ struct DetailView: View {
     
     func loadData(){
         self.fetched = false
-        AF.request("https://ruiqi571.wl.r.appspot.com/ios/detail/\(self.type)/\(self.ID)").responseData{
+        AF.request("https://ruiqi571.wl.r.appspot.com/ios/video/\(self.type)/\(self.ID)").responseData{
             (data) in
             let json = try! JSON(data: data.data!)
-            self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: json["vote_average"].stringValue, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
-            self.item = listItem(ID: self.ID, type: self.type, path: json["poster_path"].stringValue)
-            AF.request("https://ruiqi571.wl.r.appspot.com/ios/video/\(self.type)/\(self.ID)").responseData{
+            print(self.ID)
+            self.video = Video(site: json["site"].stringValue, type: json["type"].stringValue, name: json["name"].stringValue, key: json["key"].stringValue)
+            
+            AF.request("https://ruiqi571.wl.r.appspot.com/ios/detail/\(self.type)/\(self.ID)").responseData{
                 (data) in
                 let json = try! JSON(data: data.data!)
-                print(self.ID)
-                self.video = Video(site: json["site"].stringValue, type: json["type"].stringValue, name: json["name"].stringValue, key: json["key"].stringValue)
+                self.detail = Detail(ID: self.ID, type: self.type, title: json["title"].stringValue, date: json["release_date"].stringValue, starRate: json["vote_average"].stringValue, overview: json["overview"].stringValue, genres: json["genres"].stringValue, imgPath: json["poster_path"].stringValue)
+                self.item = listItem(ID: self.ID, type: self.type, path: json["poster_path"].stringValue)
+            
                 AF.request("https://ruiqi571.wl.r.appspot.com/ios/cast/\(self.type)/\(self.ID)").responseData{
                     (data) in
                     let json = try! JSON(data: data.data!)
