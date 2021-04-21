@@ -11,6 +11,10 @@ class WatchList: ObservableObject{
     @Published var list = [listItem]()
     
     init(){
+        self.list = self.load()
+    }
+    
+    func load() -> [listItem]{
         self.list = [listItem]()
         if let objects = UserDefaults.standard.value(forKey: "user_objects") as? Data {
              let decoder = JSONDecoder()
@@ -18,6 +22,7 @@ class WatchList: ObservableObject{
                 self.list = objectsDecoded
              }
         }
+        return self.list
     }
     
     func save(data: WatchList){
@@ -30,7 +35,7 @@ class WatchList: ObservableObject{
 
 
 struct WatchListView: View {
-    @EnvironmentObject var listData: WatchList
+    @StateObject var listData = WatchList()
     
     var body: some View {
         if(listData.list.count == 0){

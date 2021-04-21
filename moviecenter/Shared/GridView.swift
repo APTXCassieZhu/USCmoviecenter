@@ -11,13 +11,9 @@ import UniformTypeIdentifiers
 
 
 struct GridView: View {
-    private var listData: WatchList
+    @State var listData: WatchList
     @State private var dragging: listItem?
-    
-    init(listData: WatchList){
-        self.listData = listData
-    }
-    
+
     @State var selected : String? = nil
     
     let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 3)
@@ -38,13 +34,14 @@ struct GridView: View {
                                 self.dragging = item
                                 return NSItemProvider(object: String(item.ID) as NSString)
                             }
-                            .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, watchlistData: listData, current: $dragging))
+                            .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, watchlistData: $listData, current: $dragging))
                             .contextMenu{
                                 Button(action: {
                                     if let index = self.listData.list.firstIndex(of: item){
                                         self.listData.list.remove(at: index)
                                     }
                                     self.listData.save(data: self.listData)
+                                    self.listData.list = self.listData.load()
                                 }){
                                     HStack(spacing: 10) {
                                         Image(systemName: "bookmark.fill")
@@ -55,7 +52,9 @@ struct GridView: View {
                     }.frame(width: 115, height: 172)
                     
                 }
-            })
+            }).onAppear{
+                self.listData.list = self.listData.load()
+            }
         }
         .padding(.leading, 20)
         .padding(.trailing, 20)
@@ -64,7 +63,7 @@ struct GridView: View {
 
 struct DropViewDelegate: DropDelegate{
     let item: listItem
-    @State var watchlistData: WatchList
+    @Binding var watchlistData: WatchList
     @Binding var current: listItem?
 
     func dropEntered(info: DropInfo) {

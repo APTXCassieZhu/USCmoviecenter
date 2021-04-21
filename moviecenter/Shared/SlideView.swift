@@ -68,6 +68,7 @@ struct SlideView: View {
                                         notice.msg = "\(slide.title) was added to Watchlist"
                                     }
                                     self.listData.save(data: self.listData)
+                                    self.listData.list = self.listData.load()
                                     notice.showToast = true
                                 }){
                                     if(self.listData.list.contains(listItem(ID: slide.ID, type: slide.type, path: slide.path))){

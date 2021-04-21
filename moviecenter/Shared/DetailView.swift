@@ -196,6 +196,7 @@ struct DetailView: View {
                             notice.msg = "\(self.detail?.title ?? "Unknown") was added to Watchlist"
                         }
                         self.listData.save(data: self.listData)
+                        self.listData.list = self.listData.load()
                         notice.showToast = true
                     }){
                         if(self.listData.list.contains(self.item)){
